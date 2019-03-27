@@ -1,0 +1,16 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Mobile test">
+
+    <test name="Web Tests">
+        <groups>
+            <run>
+                <include name="web"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="scenarios.webTests"/>
+        </packages>
+    </test>
+
+</suite>
