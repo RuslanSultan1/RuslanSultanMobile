@@ -3,6 +3,7 @@ package setup;
 import exceptions.MobileAppTypeException;
 import exceptions.UnknownMobilePlatformException;
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.remote.AndroidMobileCapabilityType;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -28,10 +29,11 @@ public class Driver extends TestProperties {
     private static String TEST_PLATFORM;
     private static String DRIVER;
     private static String DEVICE_NAME;
+    protected static String UDID;
+    protected static String APP_PACKAGE;
+    protected static String APP_ACTIVITY;
     private static String CHROMEDRIVER_EXECUTABLE_DIR_KEY;
     private static String CHROMEDRIVER_EXECUTABLE_DIR;
-    private static String DRIVER_PATH;
-
     /**
      * Initialize driver with appropriate capabilities depending on platform and application
      *
@@ -47,13 +49,14 @@ public class Driver extends TestProperties {
             DEVICE_NAME = getProp("devicename");
             CHROMEDRIVER_EXECUTABLE_DIR_KEY = "chromedriverExecutableDir";
             CHROMEDRIVER_EXECUTABLE_DIR = System.getProperty("user.dir") + getProp(CHROMEDRIVER_EXECUTABLE_DIR_KEY);
-            DRIVER_PATH = getProp("driverPath");
+            APP_PACKAGE = getProp("appPackage");
+            APP_ACTIVITY = getProp("appActivity");
             capabilities = new DesiredCapabilities();
             String browserName;
             //Setup browser depending on platform
             switch (TEST_PLATFORM) {
                 case ANDROID:
-                    capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, DEVICE_NAME); //default Android emulator
+                    capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, DEVICE_NAME);
                     browserName = CHROME;
                     break;
                 case IOS:
@@ -62,12 +65,16 @@ public class Driver extends TestProperties {
                 default:
                     throw new UnknownMobilePlatformException();
             }
+            capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, DEVICE_NAME);
             capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, TEST_PLATFORM);
+            capabilities.setCapability(MobileCapabilityType.UDID, UDID);
             //Setup type of application: mobile, web or hybrid
             if (AUT != null && SUT == null) {
                 //Native
                 File app = new File(AUT);
                 capabilities.setCapability(MobileCapabilityType.APP, app.getAbsolutePath());
+                capabilities.setCapability(AndroidMobileCapabilityType.APP_PACKAGE, APP_PACKAGE);
+                capabilities.setCapability(AndroidMobileCapabilityType.APP_ACTIVITY, APP_ACTIVITY);
             } else if (SUT != null && AUT == null) {
                 //Web
                 capabilities.setCapability(CHROMEDRIVER_EXECUTABLE_DIR_KEY, CHROMEDRIVER_EXECUTABLE_DIR);
@@ -97,3 +104,4 @@ public class Driver extends TestProperties {
         return wait;
     }
 }
+
