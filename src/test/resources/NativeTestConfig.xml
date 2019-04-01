@@ -1,7 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="Mobile test">
-
     <test name="Native Tests">
         <groups>
             <run>
@@ -12,5 +11,4 @@
             <package name="scenarios.nativeTests"/>
         </packages>
     </test>
-
 </suite>

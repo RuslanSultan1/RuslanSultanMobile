@@ -28,12 +28,10 @@ public class Driver extends TestProperties {
     protected static String SUT;
     private static String TEST_PLATFORM;
     private static String DRIVER;
-    private static String DEVICE_NAME;
     protected static String UDID;
     protected static String APP_PACKAGE;
     protected static String APP_ACTIVITY;
-    private static String CHROMEDRIVER_EXECUTABLE_DIR_KEY;
-    private static String CHROMEDRIVER_EXECUTABLE_DIR;
+
     /**
      * Initialize driver with appropriate capabilities depending on platform and application
      *
@@ -46,9 +44,7 @@ public class Driver extends TestProperties {
             SUT = getProp("sut");
             TEST_PLATFORM = getProp("platform");
             DRIVER = getProp("driver");
-            DEVICE_NAME = getProp("devicename");
-            CHROMEDRIVER_EXECUTABLE_DIR_KEY = "chromedriverExecutableDir";
-            CHROMEDRIVER_EXECUTABLE_DIR = System.getProperty("user.dir") + getProp(CHROMEDRIVER_EXECUTABLE_DIR_KEY);
+            UDID = getProp("udid");
             APP_PACKAGE = getProp("appPackage");
             APP_ACTIVITY = getProp("appActivity");
             capabilities = new DesiredCapabilities();
@@ -56,7 +52,6 @@ public class Driver extends TestProperties {
             //Setup browser depending on platform
             switch (TEST_PLATFORM) {
                 case ANDROID:
-                    capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, DEVICE_NAME);
                     browserName = CHROME;
                     break;
                 case IOS:
@@ -65,7 +60,6 @@ public class Driver extends TestProperties {
                 default:
                     throw new UnknownMobilePlatformException();
             }
-            capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, DEVICE_NAME);
             capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, TEST_PLATFORM);
             capabilities.setCapability(MobileCapabilityType.UDID, UDID);
             //Setup type of application: mobile, web or hybrid
@@ -77,7 +71,6 @@ public class Driver extends TestProperties {
                 capabilities.setCapability(AndroidMobileCapabilityType.APP_ACTIVITY, APP_ACTIVITY);
             } else if (SUT != null && AUT == null) {
                 //Web
-                capabilities.setCapability(CHROMEDRIVER_EXECUTABLE_DIR_KEY, CHROMEDRIVER_EXECUTABLE_DIR);
                 capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, browserName);
             } else throw new MobileAppTypeException();
 
